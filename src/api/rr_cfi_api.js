@@ -1,6 +1,4 @@
-import axios from '../axiosConfig';
-
-// const API_URL = 'http://localhost:8010';
+import axios from '../config/axiosConfig';
 
 export const getAuthToken = async (username, password) => {
     try {
@@ -11,6 +9,7 @@ export const getAuthToken = async (username, password) => {
         const response = await axios.post(`/auth/token`, body);
         return response.data;
     } catch (error) {
+        console.log(error)
         throw error;
     }
 };

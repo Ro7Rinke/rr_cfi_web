@@ -1,7 +1,8 @@
 import { SET_AUTH_TOKEN } from '../actions/authTokenActions';
 
 const initialState = {
-    authToken: null,
+    access: null,
+    refresh: null
 };
 
 const authTokenReducer = (state = initialState, action) => {

@@ -1,21 +1,27 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAuthToken } from '../api/rr_cfi_api';
+import { useDispatch } from 'react-redux';
+import { setAuthToken } from '../redux/actions/authTokenActions'
 
 const Login = () => {
+  const dispatch = useDispatch()
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = await getAuthToken(username, password)
-    console.log(result)
-    // Simular autenticação
-    if (username === 'admin' && password === 'password') {
-      navigate('/home');
-    } else {
-      alert('Usuário ou senha inválidos');
+    try {
+      const result = await getAuthToken(username, password)
+      if(result.access){
+        dispatch(setAuthToken(result))
+        navigate('/home')
+      }else{
+        alert("Usuário ou senha inválidos")
+      }
+    } catch (error) {
+      alert('Falha ao efetuar o login');
     }
   };
 
