@@ -1,8 +1,30 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
+
+const DropdownContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+`;
+
+const StyledSelect = styled.select`
+  margin: 0 10px;
+  padding: 12px 15px; /* Aumentar o padding para dar mais espaço */
+  border: 2px solid #fdd835;
+  border-radius: 5px;
+  background-color: #333;
+  color: #fdd835;
+  font-size: 18px; /* Aumentar a font-size */
+  
+  &:focus {
+    outline: none;
+    border-color: #e6c400;
+  }
+`;
 
 const MonthYearDropdown = ({ onMonthYearChange }) => {
   const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-  const years = [2023, 2024, 2025];
+  const years = [2023, 2024, 2025]; // Anos disponíveis
 
   const [selectedMonth, setSelectedMonth] = useState(10);
   const [selectedYear, setSelectedYear] = useState(2024);
@@ -20,41 +42,24 @@ const MonthYearDropdown = ({ onMonthYearChange }) => {
   };
 
   return (
-    <div style={styles.container}>
-      <select value={selectedMonth} onChange={handleMonthChange} style={styles.select}>
+    <DropdownContainer>
+      <StyledSelect value={selectedMonth} onChange={handleMonthChange}>
         {months.map((month, index) => (
           <option key={index} value={month}>
             {month}
           </option>
         ))}
-      </select>
+      </StyledSelect>
 
-      <select value={selectedYear} onChange={handleYearChange} style={styles.select}>
+      <StyledSelect value={selectedYear} onChange={handleYearChange}>
         {years.map((year, index) => (
           <option key={index} value={year}>
             {year}
           </option>
         ))}
-      </select>
-    </div>
+      </StyledSelect>
+    </DropdownContainer>
   );
-};
-
-const styles = {
-  container: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    width: '100%',
-    maxWidth: '400px',
-    margin: '0 auto',
-  },
-  select: {
-    width: '48%',
-    padding: '10px',
-    borderRadius: '4px',
-    border: '1px solid #ccc',
-    fontSize: '16px',
-  },
 };
 
 export default MonthYearDropdown;
