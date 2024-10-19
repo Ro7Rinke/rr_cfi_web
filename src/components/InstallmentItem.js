@@ -15,14 +15,17 @@ const InstallmentInfo = styled.div`
 `;
 
 const InstallmentItem = ({ installment }) => {
-  return (
-    <InstallmentContainer>
-      <InstallmentInfo><strong>Valor:</strong> R$ {installment.value}</InstallmentInfo>
-      <InstallmentInfo><strong>Data:</strong> {installment.date}</InstallmentInfo>
-      <InstallmentInfo><strong>Número da Parcela:</strong> {installment.number}</InstallmentInfo>
-      <InstallmentInfo><strong>Status:</strong> {installment.status}</InstallmentInfo>
-    </InstallmentContainer>
-  );
+    let installmentNumberText = `${installment.installment_number}`
+    if(installment.entry.total_installments > 1) installmentNumberText += ` / ${installment.entry.total_installments}`
+
+    return (
+        <InstallmentContainer>
+        <InstallmentInfo><strong>Valor:</strong> R$ {installment.value}</InstallmentInfo>
+        <InstallmentInfo><strong>Data:</strong> {installment.entry.date}</InstallmentInfo>
+        <InstallmentInfo><strong>Número da Parcela:</strong> {installmentNumberText}</InstallmentInfo>
+        <InstallmentInfo><strong>Categoria:</strong> {installment.entry.id_category}</InstallmentInfo>
+        </InstallmentContainer>
+    );
 };
 
 export default InstallmentItem;

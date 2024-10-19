@@ -10,7 +10,7 @@ const authTokenReducer = (state = initialState, action) => {
         case SET_AUTH_TOKEN:
             return {
                 ...state,
-                value: action.payload,
+                ...action.payload,
             };
         default:
             return state;

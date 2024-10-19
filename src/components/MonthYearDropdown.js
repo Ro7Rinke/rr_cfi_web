@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
 const MonthYearDropdown = ({ onMonthYearChange }) => {
-  const months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+  const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   const years = [2023, 2024, 2025]; // Anos disponíveis
 
-  const [selectedMonth, setSelectedMonth] = useState('Outubro');
+  const [selectedMonth, setSelectedMonth] = useState(10);
   const [selectedYear, setSelectedYear] = useState(2024);
 
   const handleMonthChange = (event) => {

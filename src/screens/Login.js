@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAuthToken } from '../api/rr_cfi_api';
+import API from '../api/rr_cfi_api';
 import { useDispatch } from 'react-redux';
 import { setAuthToken } from '../redux/actions/authTokenActions'
 
@@ -13,7 +13,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const result = await getAuthToken(username, password)
+      const result = await API.getAuthToken(username, password)
       if(result.access){
         dispatch(setAuthToken(result))
         navigate('/home')
