@@ -18,15 +18,15 @@ const Home = () => {
 
   useEffect(() => {
     const [month, year] = selectedMonthYear.split('/');
-    updateInstallments(month, year); // Chama a função com o mês e ano atuais
+    updateInstallments(month, year);
   }, [selectedMonthYear]);
 
   return (
-    <div>
-      <h1>Selecionar Mês e Ano:</h1>
+    <div style={styles.container}>
+      <h1 style={styles.title}>Selecionar Mês e Ano:</h1>
       <MonthYearDropdown onMonthYearChange={setSelectedMonthYear} />
 
-      <h2>Total de Parcelas do Mês: {selectedMonthYear}</h2>
+      <h2 style={styles.subtitle}>Total de Parcelas do Mês: {selectedMonthYear}</h2>
 
       {installments.length > 0 ? (
         installments.map((installment, index) => (
@@ -37,6 +37,21 @@ const Home = () => {
       )}
     </div>
   );
+};
+
+const styles = {
+  container: {
+    padding: '0 20px',
+    boxSizing: 'border-box',
+  },
+  title: {
+    fontSize: '24px',
+    textAlign: 'center',
+  },
+  subtitle: {
+    fontSize: '18px',
+    textAlign: 'center',
+  },
 };
 
 export default Home;

@@ -7,6 +7,8 @@ const InstallmentContainer = styled.div`
   margin-bottom: 10px;
   border-radius: 8px;
   background-color: #f9f9f9;
+  width: 100%;
+  box-sizing: border-box;
 `;
 
 const InstallmentInfo = styled.div`
@@ -15,17 +17,19 @@ const InstallmentInfo = styled.div`
 `;
 
 const InstallmentItem = ({ installment }) => {
-    let installmentNumberText = `${installment.installment_number}`
-    if(installment.entry.total_installments > 1) installmentNumberText += ` / ${installment.entry.total_installments}`
+  let installmentNumberText = `${installment.installment_number}`;
+  if (installment.entry.total_installments > 1) {
+    installmentNumberText += ` / ${installment.entry.total_installments}`;
+  }
 
-    return (
-        <InstallmentContainer>
-        <InstallmentInfo><strong>Valor:</strong> R$ {installment.value}</InstallmentInfo>
-        <InstallmentInfo><strong>Data:</strong> {installment.entry.date}</InstallmentInfo>
-        <InstallmentInfo><strong>Número da Parcela:</strong> {installmentNumberText}</InstallmentInfo>
-        <InstallmentInfo><strong>Categoria:</strong> {installment.entry.id_category}</InstallmentInfo>
-        </InstallmentContainer>
-    );
+  return (
+    <InstallmentContainer>
+      <InstallmentInfo><strong>Valor:</strong> R$ {installment.value}</InstallmentInfo>
+      <InstallmentInfo><strong>Data:</strong> {installment.entry.date}</InstallmentInfo>
+      <InstallmentInfo><strong>Número da Parcela:</strong> {installmentNumberText}</InstallmentInfo>
+      <InstallmentInfo><strong>Categoria:</strong> {installment.entry.id_category}</InstallmentInfo>
+    </InstallmentContainer>
+  );
 };
 
 export default InstallmentItem;
