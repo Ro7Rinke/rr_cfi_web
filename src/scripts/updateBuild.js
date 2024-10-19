@@ -12,22 +12,22 @@ function getCommitCount() {
   }
 }
 
-// Função para atualizar o BUILD_NUMBER no arquivo .env
+// Função para atualizar o REACT_APP_BUILD_NUMBER no arquivo .env
 function updateEnvFile(buildNumber) {
   const envFilePath = '.env';
   const envContent = fs.readFileSync(envFilePath, 'utf-8');
   const updatedContent = envContent
     .split('\n')
     .map(line => {
-      if (line.startsWith('BUILD_NUMBER=')) {
-        return `BUILD_NUMBER=${buildNumber}`;
+      if (line.startsWith('REACT_APP_BUILD_NUMBER=')) {
+        return `REACT_APP_BUILD_NUMBER=${buildNumber}`;
       }
       return line;
     })
     .join('\n');
 
   fs.writeFileSync(envFilePath, updatedContent, 'utf-8');
-  console.log(`BUILD_NUMBER atualizado para: ${buildNumber}`);
+  console.log(`REACT_APP_BUILD_NUMBER atualizado para: ${buildNumber}`);
 }
 
 // Executar as funções
