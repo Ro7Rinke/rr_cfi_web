@@ -3,6 +3,79 @@ import { useNavigate } from 'react-router-dom';
 import API from '../api/rr_cfi_api';
 import { useDispatch } from 'react-redux';
 import { setAuthToken } from '../redux/actions/authTokenActions';
+import styled from 'styled-components';
+import { FaUser, FaLock } from 'react-icons/fa';
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #121212; /* Cor de fundo escura */
+  color: #fdd835; /* Amarelo */
+  padding: 0 20px; /* Adiciona espaçamento lateral */
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Largura total do formulário */
+  max-width: 400px; /* Largura máxima do formulário */
+  background-color: #222; /* Fundo do formulário */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+`;
+
+const InputContainer = styled.div`
+  position: relative;
+  margin-bottom: 15px;
+`;
+
+const Input = styled.input`
+  width: 100%; /* Largura total do input */
+  padding: 10px 40px; /* Espaço interno */
+  border: 2px solid #fdd835; /* Amarelo */
+  border-radius: 5px;
+  background-color: #333; /* Fundo dos inputs */
+  color: #fdd835; /* Texto amarelo */
+  font-size: 16px;
+
+  &::placeholder {
+    color: #fdd835; /* Cor do placeholder */
+    opacity: 0.7; /* Opacidade do placeholder */
+  }
+
+  /* Limita a largura do input */
+  box-sizing: border-box; /* Adiciona border e padding à largura total */
+`;
+
+const Icon = styled.span`
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #fdd835; /* Amarelo */
+`;
+
+const Button = styled.button`
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #fdd835; /* Amarelo */
+  color: #121212; /* Texto escuro */
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 10px; /* Espaço acima do botão */
+  width: 100%; /* Largura total do botão */
+  box-sizing: border-box; /* Adiciona border e padding à largura total */
+
+  &:hover {
+    background-color: #e6c400; /* Tom mais escuro de amarelo ao passar o mouse */
+  }
+`;
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -18,7 +91,7 @@ const Login = () => {
         dispatch(setAuthToken(result));
         navigate('/home');
       } else {
-        alert("Usuário ou senha inválidos");
+        alert('Usuário ou senha inválidos');
       }
     } catch (error) {
       alert('Falha ao efetuar o login');
@@ -26,73 +99,33 @@ const Login = () => {
   };
 
   return (
-    <div style={styles.container}>
+    <Container>
       <h2>RR_CFI</h2>
-      <form onSubmit={handleSubmit} style={styles.form}>
-        <div style={styles.inputGroup}>
-          <label>Username</label>
-          <input
+      <Form onSubmit={handleSubmit}>
+        <InputContainer>
+          <Icon><FaUser /></Icon>
+          <Input
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            placeholder="Usuário"
             required
-            style={styles.input}
           />
-        </div>
-        <div style={styles.inputGroup}>
-          <label>Password</label>
-          <input
+        </InputContainer>
+        <InputContainer>
+          <Icon><FaLock /></Icon>
+          <Input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            placeholder="Senha"
             required
-            style={styles.input}
           />
-        </div>
-        <button type="submit" style={styles.button}>Login</button>
-      </form>
-    </div>
+        </InputContainer>
+        <Button type="submit">Login</Button>
+      </Form>
+    </Container>
   );
-};
-
-const styles = {
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100vh',
-    padding: '0 20px',
-    boxSizing: 'border-box',
-  },
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-    width: '100%',
-    maxWidth: '400px',
-  },
-  inputGroup: {
-    marginBottom: '15px',
-  },
-  input: {
-    width: '100%',
-    padding: '10px',
-    borderRadius: '4px',
-    border: '1px solid #ccc',
-    fontSize: '16px',
-    boxSizing: 'border-box', // Inclui padding e bordas na largura total
-  },
-  button: {
-    width: '100%',
-    padding: '10px',
-    borderRadius: '4px',
-    border: 'none',
-    backgroundColor: '#007bff',
-    color: '#fff',
-    fontSize: '16px',
-    cursor: 'pointer',
-    transition: 'background-color 0.3s',
-  },
 };
 
 export default Login;
