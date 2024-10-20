@@ -1,125 +1,179 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
+
+// Estilos principais
+const Container = styled.div`
+  padding: 20px;
+  background-color: #121212;
+  color: white;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 400px; /* Limita o tamanho máximo do formulário para desktops */
+  background-color: #222;
+  padding: 20px;
+  border-radius: 10px;
+`;
+
+const FormGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+`;
+
+const Label = styled.label`
+  margin-bottom: 5px;
+  font-weight: bold;
+`;
+
+const Input = styled.input`
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #333;
+  color: white;
+
+  &:focus {
+    border-color: #fdd835; /* Cor de destaque para foco */
+    outline: none;
+  }
+`;
+
+const Select = styled.select`
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #333;
+  color: white;
+
+  &:focus {
+    border-color: #fdd835;
+    outline: none;
+  }
+`;
+
+const Button = styled.button`
+  padding: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  background-color: #fdd835;
+  border: none;
+  border-radius: 5px;
+  color: black;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #e1c006;
+  }
+`;
 
 const AddEntry = () => {
   const [title, setTitle] = useState('');
   const [totalValue, setTotalValue] = useState('0,00');
   const [installments, setInstallments] = useState(1);
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]); // Dia atual por padrão
+  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [category, setCategory] = useState('');
 
   const categories = ['Alimentação', 'Educação', 'Lazer', 'Saúde', 'Transporte'];
 
-  // Função para formatar o valor como moeda brasileira com duas casas decimais
   const handleTotalValueChange = (e) => {
-    let value = e.target.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
-    
-    // Se o valor for vazio, reinicia para '0,00'
+    let value = e.target.value.replace(/\D/g, ''); 
     if (!value) {
       setTotalValue('0,00');
       return;
     }
-
-    // Remove os zeros à esquerda, se houver
     value = parseInt(value, 10).toString();
-
-    // Formata o valor com vírgula para separar as casas decimais
     const formattedValue = (value.length === 1 
       ? '0,0' + value 
       : value.length === 2 
       ? '0,' + value 
       : value.slice(0, -2) + ',' + value.slice(-2)
     );
-
     setTotalValue(formattedValue);
   };
 
-  // Função para garantir que o cursor fique à direita quando entrar no campo
   const handleFocus = (e) => {
     const length = e.target.value.length;
-    e.target.setSelectionRange(length, length); // Move o cursor para o final
+    e.target.setSelectionRange(length, length);
   };
 
-  // Função para enviar o formulário
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Converte o valor para float antes de enviar
     const formattedTotalValue = parseFloat(totalValue.replace(',', '.'));
-
-    const newEntry = {
-      title,
-      totalValue: formattedTotalValue,
-      installments,
-      date,
-      category,
-    };
-
-    console.log('Nova entrada adicionada:', newEntry);
-    // Aqui você pode adicionar a lógica para salvar a nova entrada no backend ou no estado global
+    const newEntry = { title, totalValue: formattedTotalValue, installments, date, category };
   };
 
   return (
-    <div>
-      <h1>Adicionar Nova Entrada</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Título:</label>
-          <input
+    <Container>
+      <h1>Novo Lançamento</h1>
+      <Form onSubmit={handleSubmit}>
+        <FormGroup>
+          <Label>Título:</Label>
+          <Input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
           />
-        </div>
+        </FormGroup>
 
-        <div>
-          <label>Valor Total (R$):</label>
-          <input
+        <FormGroup>
+          <Label>Valor Total (R$):</Label>
+          <Input
             type="text"
             value={totalValue}
             onChange={handleTotalValueChange}
-            onFocus={handleFocus} // Garante que o cursor inicie à direita
+            onFocus={handleFocus}
             required
             maxLength="10"
           />
-        </div>
+        </FormGroup>
 
-        <div>
-            <label>Total de Parcelas:</label>
-            <input
-                type="number"
-                value={installments}
-                onChange={e => setInstallments(e.target.value)}
-                min="1" // impede valores negativos ou zero
-                pattern="[0-9]*" // restringe para números
-            />
-        </div>
+        <FormGroup>
+          <Label>Total de Parcelas:</Label>
+          <Input
+            type="number"
+            value={installments}
+            onChange={(e) => setInstallments(e.target.value)}
+            min="1"
+            pattern="[0-9]*"
+          />
+        </FormGroup>
 
-        <div>
-          <label>Data:</label>
-          <input
+        <FormGroup>
+          <Label>Data:</Label>
+          <Input
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
             required
           />
-        </div>
+        </FormGroup>
 
-        <div>
-          <label>Categoria:</label>
-          <select value={category} onChange={(e) => setCategory(e.target.value)} required>
-            <option value="">Selecione uma categoria</option>
+        <FormGroup>
+          <Label>Categoria:</Label>
+          <Select value={category} onChange={(e) => setCategory(e.target.value)} required>
             {categories.map((cat, index) => (
               <option key={index} value={cat}>
                 {cat}
               </option>
             ))}
-          </select>
-        </div>
+          </Select>
+        </FormGroup>
 
-        <button type="submit">Adicionar Entrada</button>
-      </form>
-    </div>
+        <Button type="submit">Adicionar Lançamento</Button>
+      </Form>
+    </Container>
   );
 };
 
