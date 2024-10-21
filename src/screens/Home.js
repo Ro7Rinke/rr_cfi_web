@@ -11,7 +11,7 @@ const TotalContainer = styled.div`
   padding: 15px;
   background-color: #222; /* Fundo do container */
   border-radius: 8px;
-  margin: 20px 0; /* Espaçamento acima e abaixo */
+  margin: 10px 0; /* Espaçamento acima e abaixo */
   color: #fdd835; /* Cor do texto */
 `;
 
@@ -21,6 +21,10 @@ const Container = styled.div`
   background-color: #121212; /* Fundo da página */
   color: white; /* Cor do texto */
   min-height: 100vh; /* Para garantir que ocupe toda a altura da tela */
+`;
+
+const SpacingDiv = styled.div`
+  margin-bottom: 20px; /* Espaçamento de 20px */
 `;
 
 const Home = () => {
@@ -41,7 +45,24 @@ const Home = () => {
     updateInstallments(month, year);
   }, [selectedMonthYear]);
 
-  const totalValue = installments.reduce((acc, installment) => acc + parseFloat(installment.value), 0).toFixed(2); // Calcula o total
+  const calculateTotals = () => {
+    let totals = {
+      total: 0,
+      categories: {}
+    }
+    installments.forEach(installment => {
+      totals.total += installment.value
+
+      const categoryIndex = `${installment.entry.id_category}`
+      if (!totals.categories[categoryIndex])
+        totals.categories[categoryIndex] = 0
+
+      totals.categories[categoryIndex] += installment.value
+    })
+
+    return totals
+  }
+  const totals = calculateTotals()
 
   return (
     <Container>
@@ -49,9 +70,17 @@ const Home = () => {
       <MonthYearDropdown onMonthYearChange={setSelectedMonthYear} />
 
       <TotalContainer>
-        <span>Total de Parcelas do Mês:</span>
-        <span>R$ {totalValue}</span>
+        <span>Total do Mês:</span>
+        <span>R$ {totals.total.toFixed(2)}</span>
       </TotalContainer>
+        {Object.entries(totals.categories).map(([categoryId, totalValue]) => (
+          <TotalContainer>
+            <span>{categoryId}:</span>
+            <span>R$ {totalValue.toFixed(2)}</span>
+          </TotalContainer>
+        ))}
+
+      <SpacingDiv />
 
       {installments.length > 0 ? (
         installments.map((installment, index) => (

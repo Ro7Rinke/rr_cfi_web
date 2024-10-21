@@ -111,6 +111,7 @@ const AddEntry = () => {
     e.preventDefault();
     const formattedTotalValue = parseFloat(totalValue.replace(',', '.'));
     const newEntry = { title, totalValue: formattedTotalValue, installments, date, category };
+    console.log(newEntry)
   };
 
   return (
