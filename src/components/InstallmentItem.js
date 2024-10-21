@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
+import Utils from '../utils';
 
 const InstallmentContainer = styled.div`
   border: 1px solid #fdd835;
@@ -26,7 +27,7 @@ const InstallmentItem = ({ installment }) => {
 
     return (
         <InstallmentContainer>
-            <InstallmentInfo><strong>Valor:</strong> R$ {installment.value}</InstallmentInfo>
+            <InstallmentInfo><strong>Valor:</strong> {Utils.formatToBRL(installment.value)}</InstallmentInfo>
             <InstallmentInfo><strong>Data:</strong> {dateText}</InstallmentInfo>
             <InstallmentInfo><strong>Parcelas:</strong> {installmentNumberText}</InstallmentInfo>
             <InstallmentInfo><strong>Categoria:</strong> {categories[`${installment.entry.id_category}`]}</InstallmentInfo>

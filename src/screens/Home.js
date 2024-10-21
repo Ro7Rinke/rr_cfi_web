@@ -5,6 +5,7 @@ import API from '../api/rr_cfi_api';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCategories } from '../redux/actions/categoriesActions';
+import Utils from '../utils';
 
 // Container para o total das parcelas
 const TotalContainer = styled.div`
@@ -94,12 +95,12 @@ const Home = () => {
 
       <TotalContainer>
         <span>Total do Mês:</span>
-        <span>R$ {totals.total.toFixed(2)}</span>
+        <span>{Utils.formatToBRL(totals.total)}</span>
       </TotalContainer>
         {Object.entries(totals.categories).map(([categoryId, totalValue]) => (
           <TotalContainer>
             <span>{categories[`${categoryId}`]}:</span>
-            <span>R$ {totalValue.toFixed(2)}</span>
+            <span>{Utils.formatToBRL(totalValue)}</span>
           </TotalContainer>
         ))}
 
