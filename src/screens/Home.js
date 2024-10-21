@@ -3,6 +3,8 @@ import MonthYearDropdown from '../components/MonthYearDropdown';
 import InstallmentItem from '../components/InstallmentItem';
 import API from '../api/rr_cfi_api';
 import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCategories } from '../redux/actions/categoriesActions';
 
 // Container para o total das parcelas
 const TotalContainer = styled.div`
@@ -28,6 +30,10 @@ const SpacingDiv = styled.div`
 `;
 
 const Home = () => {
+  const dispatch = useDispatch()
+
+  const categories = useSelector((state) => state.categories)
+
   const [selectedMonthYear, setSelectedMonthYear] = useState('10/2024');
   const [installments, setInstallments] = useState([]);
 
@@ -39,6 +45,23 @@ const Home = () => {
       console.error('Erro ao buscar parcelas:', error);
     }
   };
+
+  const updateCategories = async () => {
+    try {
+      const result = await API.getCategories()
+      let categoriesData = {}
+      for (const category of result) {
+        categoriesData[`${category.id}`] = category.title
+      }
+      dispatch(setCategories(categoriesData))
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  useEffect(() => {
+    updateCategories()
+  }, [])
 
   useEffect(() => {
     const [month, year] = selectedMonthYear.split('/');
@@ -75,7 +98,7 @@ const Home = () => {
       </TotalContainer>
         {Object.entries(totals.categories).map(([categoryId, totalValue]) => (
           <TotalContainer>
-            <span>{categoryId}:</span>
+            <span>{categories[`${categoryId}`]}:</span>
             <span>R$ {totalValue.toFixed(2)}</span>
           </TotalContainer>
         ))}

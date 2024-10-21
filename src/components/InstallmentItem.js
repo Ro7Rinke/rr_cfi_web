@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
 const InstallmentContainer = styled.div`
@@ -16,15 +17,19 @@ const InstallmentInfo = styled.div`
 `;
 
 const InstallmentItem = ({ installment }) => {
+    const categories = useSelector((state) => state.categories)
+
+    const dateText = new Date(installment.entry.date).toLocaleDateString('pt-BR')
+
     let installmentNumberText = `${installment.installment_number}`
     if (installment.entry.total_installments > 1) installmentNumberText += ` / ${installment.entry.total_installments}`
 
     return (
         <InstallmentContainer>
             <InstallmentInfo><strong>Valor:</strong> R$ {installment.value}</InstallmentInfo>
-            <InstallmentInfo><strong>Data:</strong> {installment.entry.date}</InstallmentInfo>
-            <InstallmentInfo><strong>Número da Parcela:</strong> {installmentNumberText}</InstallmentInfo>
-            <InstallmentInfo><strong>Categoria:</strong> {installment.entry.id_category}</InstallmentInfo>
+            <InstallmentInfo><strong>Data:</strong> {dateText}</InstallmentInfo>
+            <InstallmentInfo><strong>Parcelas:</strong> {installmentNumberText}</InstallmentInfo>
+            <InstallmentInfo><strong>Categoria:</strong> {categories[`${installment.entry.id_category}`]}</InstallmentInfo>
         </InstallmentContainer>
     );
 };

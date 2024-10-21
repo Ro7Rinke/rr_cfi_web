@@ -26,6 +26,15 @@ const API = {
             return []
         }
     },
+    getCategories: async () => {
+        try {
+            const response = await axios.get(`/cfi/categories`);
+            return response.data;
+        } catch (error) {
+            console.log(error)
+            return []
+        }
+    },
 }
 
 export default API
