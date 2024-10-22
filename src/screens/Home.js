@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCategories } from '../redux/actions/categoriesActions';
 import Utils from '../utils';
+import { useNavigate } from 'react-router-dom';
 
 // Container para o total das parcelas
 const TotalContainer = styled.div`
@@ -24,16 +25,43 @@ const Container = styled.div`
   background-color: #121212; /* Fundo da página */
   color: white; /* Cor do texto */
   min-height: 100vh; /* Para garantir que ocupe toda a altura da tela */
+  padding-bottom: 60px;
 `;
 
 const SpacingDiv = styled.div`
   margin-bottom: 20px; /* Espaçamento de 20px */
 `;
 
-const Home = () => {
-  const dispatch = useDispatch()
+// Estilizando o botão flutuante
+const FloatingButton = styled.button`
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #fdd835;
+  color: #222;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 50px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s;
+  opacity: 0.34;
 
-  const categories = useSelector((state) => state.categories)
+  &:hover {
+    background-color: #ffeb3b;
+  }
+`;
+
+const Home = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const categories = useSelector((state) => state.categories);
 
   const [selectedMonthYear, setSelectedMonthYear] = useState('10/2024');
   const [installments, setInstallments] = useState([]);
@@ -49,20 +77,20 @@ const Home = () => {
 
   const updateCategories = async () => {
     try {
-      const result = await API.getCategories()
-      let categoriesData = {}
+      const result = await API.getCategories();
+      let categoriesData = {};
       for (const category of result) {
-        categoriesData[`${category.id}`] = category.title
+        categoriesData[`${category.id}`] = category.title;
       }
-      dispatch(setCategories(categoriesData))
+      dispatch(setCategories(categoriesData));
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }
+  };
 
   useEffect(() => {
-    updateCategories()
-  }, [])
+    updateCategories();
+  }, []);
 
   useEffect(() => {
     const [month, year] = selectedMonthYear.split('/');
@@ -72,21 +100,24 @@ const Home = () => {
   const calculateTotals = () => {
     let totals = {
       total: 0,
-      categories: {}
-    }
-    installments.forEach(installment => {
-      totals.total += installment.value
+      categories: {},
+    };
+    installments.forEach((installment) => {
+      totals.total += installment.value;
 
-      const categoryIndex = `${installment.entry.id_category}`
-      if (!totals.categories[categoryIndex])
-        totals.categories[categoryIndex] = 0
+      const categoryIndex = `${installment.entry.id_category}`;
+      if (!totals.categories[categoryIndex]) totals.categories[categoryIndex] = 0;
 
-      totals.categories[categoryIndex] += installment.value
-    })
+      totals.categories[categoryIndex] += installment.value;
+    });
 
-    return totals
-  }
-  const totals = calculateTotals()
+    return totals;
+  };
+  const totals = calculateTotals();
+
+  const handleAddEntry = () => {
+    navigate('/addEntry');
+  };
 
   return (
     <Container>
@@ -97,12 +128,12 @@ const Home = () => {
         <span>Total do Mês:</span>
         <span>{Utils.formatToBRL(totals.total)}</span>
       </TotalContainer>
-        {Object.entries(totals.categories).map(([categoryId, totalValue]) => (
-          <TotalContainer>
-            <span>{categories[`${categoryId}`]}:</span>
-            <span>{Utils.formatToBRL(totalValue)}</span>
-          </TotalContainer>
-        ))}
+      {Object.entries(totals.categories).map(([categoryId, totalValue]) => (
+        <TotalContainer key={categoryId}>
+          <span>{categories[`${categoryId}`]}:</span>
+          <span>{Utils.formatToBRL(totalValue)}</span>
+        </TotalContainer>
+      ))}
 
       <SpacingDiv />
 
@@ -113,6 +144,9 @@ const Home = () => {
       ) : (
         <p>Nenhuma parcela disponível para {selectedMonthYear}.</p>
       )}
+
+      {/* Botão flutuante */}
+      <FloatingButton onClick={handleAddEntry}>+</FloatingButton>
     </Container>
   );
 };
