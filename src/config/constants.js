@@ -7,6 +7,6 @@ export const HTTP_METHOD = {
     OPTIONS: 'OPTIONS'
 }
 
-export const VERSION = 'v0.6.0'
+export const VERSION = 'v0.6.1'
 export const BUILD_NUMBER = Number(process.env.REACT_APP_BUILD_NUMBER)
 export const IS_DEBUG = process.env.REACT_APP_DEBUG === 'true'
