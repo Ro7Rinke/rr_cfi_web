@@ -36,7 +36,7 @@ const SpacingDiv = styled.div`
 const FloatingButton = styled.button`
   position: fixed;
   bottom: 80px;
-  right: 20px;
+  right: 40px;
   width: 60px;
   height: 60px;
   border-radius: 50%;
