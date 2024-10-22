@@ -97,6 +97,7 @@ const Home = () => {
   const updateTransactionTypes = async () => {
     try {
       const result = await API.getTransactionTypes()
+      console.log(result)
       let transactionTypesData = {}
       for(const transactioType of result) {
         transactionTypesData[`${transactioType.id}`] = transactioType
