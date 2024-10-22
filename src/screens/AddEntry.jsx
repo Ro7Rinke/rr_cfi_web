@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux'; // Para acessar o Redux
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import API from '../api/rr_cfi_api';
 import { useNavigate } from 'react-router-dom';
 
-// Estilos principais
 const Container = styled.div`
   padding: 20px;
   background-color: #121212;
@@ -89,8 +88,7 @@ const AddEntry = () => {
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [category, setCategory] = useState('');
 
-  // Acessar categorias do Redux
-  const categories = useSelector((state) => state.categories); // Supondo que as categorias estão no Redux
+  const categories = useSelector((state) => state.categories);
 
   const sendEntry = async (entry) => {
     try {
