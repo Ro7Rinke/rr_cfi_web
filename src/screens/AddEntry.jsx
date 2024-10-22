@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux'; // Para acessar o Redux
 import styled from 'styled-components';
+import API from '../api/rr_cfi_api';
+import { useNavigate } from 'react-router-dom';
 
 // Estilos principais
 const Container = styled.div`
@@ -78,13 +81,30 @@ const Button = styled.button`
 `;
 
 const AddEntry = () => {
+  const navigate = useNavigate()
+
   const [title, setTitle] = useState('');
   const [totalValue, setTotalValue] = useState('0,00');
-  const [installments, setInstallments] = useState(1);
+  const [totalInstallments, setTotalInstallments] = useState(1);
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [category, setCategory] = useState('');
 
-  const categories = ['Alimentação', 'Educação', 'Lazer', 'Saúde', 'Transporte'];
+  // Acessar categorias do Redux
+  const categories = useSelector((state) => state.categories); // Supondo que as categorias estão no Redux
+
+  const sendEntry = async (entry) => {
+    try {
+      const result = await API.sendEntry(entry)
+      if(result){
+        navigate('/home')
+      }else{
+        alert('Não foi possível criar o lançamento')
+      }
+    } catch (error) {
+      console.log(error)
+      alert('Falha ao cadastrar novo lançamento.')
+    }
+  }
 
   const handleTotalValueChange = (e) => {
     let value = e.target.value.replace(/\D/g, ''); 
@@ -110,8 +130,16 @@ const AddEntry = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const formattedTotalValue = parseFloat(totalValue.replace(',', '.'));
-    const newEntry = { title, totalValue: formattedTotalValue, installments, date, category };
-    console.log(newEntry)
+    const newEntry = {
+      title,
+      total_value: formattedTotalValue,
+      total_installments: totalInstallments,
+      date,
+      id_category: category,
+      is_periodic: false,
+      id_transaction_type: 1
+    };
+    sendEntry(newEntry)
   };
 
   return (
@@ -144,8 +172,8 @@ const AddEntry = () => {
           <Label>Total de Parcelas:</Label>
           <Input
             type="number"
-            value={installments}
-            onChange={(e) => setInstallments(e.target.value)}
+            value={totalInstallments}
+            onChange={(e) => setTotalInstallments(e.target.value)}
             min="1"
             pattern="[0-9]*"
           />
@@ -164,9 +192,9 @@ const AddEntry = () => {
         <FormGroup>
           <Label>Categoria:</Label>
           <Select value={category} onChange={(e) => setCategory(e.target.value)} required>
-            {categories.map((cat, index) => (
-              <option key={index} value={cat}>
-                {cat}
+            {Object.keys(categories).map((id) => (
+              <option key={id} value={id}>
+                {categories[id]}
               </option>
             ))}
           </Select>

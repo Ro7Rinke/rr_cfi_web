@@ -1,4 +1,5 @@
 import axios from '../config/axiosConfig';
+import { HTTP_METHOD } from '../config/constants';
 const API = {
     getAuthToken: async (username, password) => {
         try {
@@ -38,6 +39,20 @@ const API = {
     checkToken: async (token) => {
         try {
             const response = await axios.get(`/cfi/token/check`,);
+            return response.data;
+        } catch (error) {
+            console.log(error)
+            return false
+        }
+    },
+    sendEntry: async (entry) => {
+        try {
+            const config = {
+                method: entry.id ? HTTP_METHOD.PATCH : HTTP_METHOD.POST,
+                url: '/cfi/entries/',
+                data: entry
+            }
+            const response = await axios(config);
             return response.data;
         } catch (error) {
             console.log(error)
