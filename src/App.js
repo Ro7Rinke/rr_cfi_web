@@ -5,6 +5,7 @@ import Home from './screens/Home';
 import AddEntry from './screens/AddEntry';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRouter';
+import Register from './screens/Register';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={<Login />} />
+          <Route path='/register' element={<Register/>} />
           <Route path="/home" element={<ProtectedRoute><Home/></ProtectedRoute>} />
           <Route path='/addEntry' element={<ProtectedRoute><AddEntry/></ProtectedRoute>} />
         </Routes>

@@ -14,6 +14,20 @@ const API = {
             throw error;
         }
     },
+    registerUser: async (username, email, password) => {
+        try {
+            const body = {
+                username,
+                email,
+                password
+            }
+            const response = await axios.post(`/cfi/register/`, body);
+            return response.data;
+        } catch (error) {
+            console.log(error)
+            return false;
+        }
+    },
     getInstallmentsListByMonthYear: async (month, year) => {
         try {
             const params = {

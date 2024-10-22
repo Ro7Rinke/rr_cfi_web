@@ -78,6 +78,16 @@ const Button = styled.button`
   }
 `;
 
+const RegisterLink = styled.p`
+  color: #fdd835;
+  cursor: pointer;
+  margin-top: 20px;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
 const Login = () => {
   const dispatch = useDispatch();
   const [username, setUsername] = useState('');
@@ -139,6 +149,7 @@ const Login = () => {
         </InputContainer>
         <Button type="submit">Login</Button>
       </Form>
+      <RegisterLink onClick={() => navigate('/register')}>Não tem uma conta? Cadastre-se</RegisterLink>
     </Container>
   );
 };
