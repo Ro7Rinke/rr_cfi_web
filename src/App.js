@@ -4,6 +4,7 @@ import Login from './screens/Login';
 import Home from './screens/Home';
 import AddEntry from './screens/AddEntry';
 import Footer from './components/Footer';
+import ProtectedRoute from './components/ProtectedRouter';
 
 function App() {
   return (
@@ -11,8 +12,8 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route path="/home" element={<Home />} />
-          <Route path='/addEntry' element={<AddEntry/>} />
+          <Route path="/home" element={<ProtectedRoute><Home/></ProtectedRoute>} />
+          <Route path='/addEntry' element={<ProtectedRoute><AddEntry/></ProtectedRoute>} />
         </Routes>
         <Footer />
       </div>

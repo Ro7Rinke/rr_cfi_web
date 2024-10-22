@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API from '../api/rr_cfi_api';
 import { useDispatch } from 'react-redux';
 import { setAuthToken } from '../redux/actions/authTokenActions';
 import styled from 'styled-components';
 import { FaUser, FaLock } from 'react-icons/fa';
+import Cookies from 'js-cookie';
 
 const Container = styled.div`
   display: flex;
@@ -83,12 +84,22 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
+  const checkLogged = async () => {
+    const result = await API.checkToken()
+    if(result){
+      const authToken = JSON.parse(Cookies.get('authToken') ?? null)
+      dispatch(setAuthToken(authToken))
+      navigate('/home')
+    }
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const result = await API.getAuthToken(username, password);
       if (result.access) {
         dispatch(setAuthToken(result));
+        Cookies.set('authToken', JSON.stringify(result), {expires: 7})
         navigate('/home');
       } else {
         alert('Usuário ou senha inválidos');
@@ -97,6 +108,10 @@ const Login = () => {
       alert('Falha ao efetuar o login');
     }
   };
+
+  useEffect(() => {
+    checkLogged()
+  }, [])
 
   return (
     <Container>

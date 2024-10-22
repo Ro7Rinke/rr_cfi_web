@@ -35,6 +35,15 @@ const API = {
             return []
         }
     },
+    checkToken: async (token) => {
+        try {
+            const response = await axios.get(`/cfi/token/check`,);
+            return response.data;
+        } catch (error) {
+            console.log(error)
+            return false
+        }
+    },
 }
 
 export default API
