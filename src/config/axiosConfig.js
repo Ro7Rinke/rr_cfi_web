@@ -1,5 +1,4 @@
 import axios from 'axios';
-import store from '../redux/store'
 import Cookies from 'js-cookie';
 
 const axiosInstance = axios.create({
