@@ -36,6 +36,15 @@ const API = {
             return []
         }
     },
+    getTransactionTypes: async () => {
+        try {
+            const response = await axios.get(`/cfi/transaction-types`);
+            return response.data;
+        } catch (error) {
+            console.log(error)
+            return []
+        }
+    },
     checkToken: async (token) => {
         try {
             const response = await axios.get(`/cfi/token/check`,);

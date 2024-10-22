@@ -7,6 +7,13 @@ const Utils = {
         maximumFractionDigits: 2
         })
     },
+    getDefaultTransactionTypes: (transactionTypes) => {
+        for (const key in transactionTypes) {
+            if(transactionTypes[key].default)
+                return transactionTypes[key].id
+        }
+        return 1
+    }
 }
 
 export default Utils

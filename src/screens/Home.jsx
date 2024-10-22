@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setCategories } from '../redux/actions/categoriesActions';
 import Utils from '../utils';
 import { useNavigate } from 'react-router-dom';
+import { setTransactionTypes } from '../redux/actions/transactionTypesActions';
 
 // Container para o total das parcelas
 const TotalContainer = styled.div`
@@ -85,7 +86,7 @@ const Home = () => {
       const result = await API.getCategories();
       let categoriesData = {};
       for (const category of result) {
-        categoriesData[`${category.id}`] = category.title;
+        categoriesData[`${category.id}`] = category;
       }
       dispatch(setCategories(categoriesData));
     } catch (error) {
@@ -93,8 +94,22 @@ const Home = () => {
     }
   };
 
+  const updateTransactionTypes = async () => {
+    try {
+      const result = await API.getTransactionTypes()
+      let transactionTypesData = {}
+      for(const transactioType of result) {
+        transactionTypesData[`${transactioType.id}`] = transactioType
+      }
+      dispatch(setTransactionTypes(transactionTypesData))
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   useEffect(() => {
-    updateCategories();
+    updateCategories()
+    updateTransactionTypes()
   }, []);
 
   useEffect(() => {
@@ -135,7 +150,7 @@ const Home = () => {
       </TotalContainer>
       {Object.entries(totals.categories).map(([categoryId, totalValue]) => (
         <TotalContainer key={categoryId}>
-          <span>{categories[`${categoryId}`]}:</span>
+          <span>{categories[`${categoryId}`].title}:</span>
           <span>{Utils.formatToBRL(totalValue)}</span>
         </TotalContainer>
       ))}

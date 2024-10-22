@@ -30,7 +30,7 @@ const InstallmentItem = ({ installment }) => {
             <InstallmentInfo><strong>Valor:</strong> {Utils.formatToBRL(installment.value)}</InstallmentInfo>
             <InstallmentInfo><strong>Data:</strong> {dateText}</InstallmentInfo>
             <InstallmentInfo><strong>Parcelas:</strong> {installmentNumberText}</InstallmentInfo>
-            <InstallmentInfo><strong>Categoria:</strong> {categories[`${installment.entry.id_category}`]}</InstallmentInfo>
+            <InstallmentInfo><strong>Categoria:</strong> {categories[`${installment.entry.id_category}`].title}</InstallmentInfo>
         </InstallmentContainer>
     );
 };

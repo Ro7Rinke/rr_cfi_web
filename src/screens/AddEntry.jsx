@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import API from '../api/rr_cfi_api';
 import { useNavigate } from 'react-router-dom';
+import Utils from '../utils';
 
 const Container = styled.div`
   padding: 20px;
@@ -89,6 +90,7 @@ const AddEntry = () => {
   const [category, setCategory] = useState('');
 
   const categories = useSelector((state) => state.categories);
+  const transactionTypes = useSelector((state) => state.transactionTypes)
 
   const sendEntry = async (entry) => {
     try {
@@ -135,7 +137,7 @@ const AddEntry = () => {
       date,
       id_category: category,
       is_periodic: false,
-      id_transaction_type: 1
+      id_transaction_type: Utils.getDefaultTransactionTypes(transactionTypes)
     };
     sendEntry(newEntry)
   };
@@ -192,7 +194,7 @@ const AddEntry = () => {
           <Select value={category} onChange={(e) => setCategory(e.target.value)} required>
             {Object.keys(categories).map((id) => (
               <option key={id} value={id}>
-                {categories[id]}
+                {categories[id].title}
               </option>
             ))}
           </Select>
