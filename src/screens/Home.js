@@ -66,9 +66,14 @@ const Home = () => {
   const [selectedMonthYear, setSelectedMonthYear] = useState('10/2024');
   const [installments, setInstallments] = useState([]);
 
+  const orderInstallmentsByDate = (installments, isNewerFirst) => {
+    installments.sort((a,b) => isNewerFirst ? (new Date(b.entry.date) - new Date(a.entry.date)) : (new Date(a.entry.date) - new Date(b.entry.date)))
+  }
+
   const updateInstallments = async (month, year) => {
     try {
       const result = await API.getInstallmentsListByMonthYear(month, year);
+      orderInstallmentsByDate(result, false)
       setInstallments(result);
     } catch (error) {
       console.error('Erro ao buscar parcelas:', error);
