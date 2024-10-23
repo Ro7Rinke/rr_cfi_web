@@ -1,4 +1,5 @@
 import axios from "axios"
+import Cookies from 'js-cookie';
 
 const Utils = {
     formatToBRL: (value) => {
@@ -36,6 +37,12 @@ const Utils = {
         } catch (error) {
             console.error(error)
             return 0
+        }
+    },
+    removeAllCookies: () => {
+        const cookies = Cookies.get()
+        for(const cookie in cookies){
+            Cookies.remove(cookie)
         }
     }
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import MonthYearDropdown from '../components/MonthYearDropdown';
 import InstallmentItem from '../components/InstallmentItem';
 import API from '../api/rr_cfi_api';
@@ -8,6 +8,68 @@ import { setCategories } from '../redux/actions/categoriesActions';
 import Utils from '../utils';
 import { useNavigate } from 'react-router-dom';
 import { setTransactionTypes } from '../redux/actions/transactionTypesActions';
+import { setAuthToken } from '../redux/actions/authTokenActions';
+import { initialStateAuthToken } from '../redux/reducers/authTokenReducer';
+
+// Container para o menu e total
+const MenuContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  position: relative; /* Necessário para o posicionamento do dropdown */
+`;
+
+// Estilizando o botão do menu
+const MenuButton = styled.button`
+  background-color: #fdd835;
+  color: black;
+  border: none;
+  padding: 10px 20px;
+  font-size: 18px;
+  cursor: pointer;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s;
+  width: 100%;
+  text-align: center;
+
+  &:hover {
+    background-color: #ffeb3b;
+  }
+`;
+
+// Estilizando o dropdown para ocupar a linha inteira
+const DropdownMenu = styled.div`
+  position: absolute;
+  top: 60px;
+  left: 0;
+  width: 100%;
+  background-color: #333333;
+  color: white;
+  border-radius: 8px;
+  padding: 10px 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+  display: ${(props) => (props.show ? 'block' : 'none')};
+  border: 2px solid #555; /* Adicionando borda ao dropdown */
+`;
+
+// Estilizando cada item do menu com separador e centralizando o texto
+const MenuItem = styled.div`
+  padding: 12px 20px;
+  text-align: center;
+  cursor: pointer;
+  border-bottom: 1px solid #444; /* Separador entre os itens */
+
+  &:hover {
+    background-color: #444444;
+  }
+
+  &:last-child {
+    border-bottom: none; /* Remove a borda inferior do último item */
+  }
+`;
 
 // Container para o total das parcelas
 const TotalContainer = styled.div`
@@ -84,6 +146,8 @@ const Home = () => {
   const navigate = useNavigate();
 
   const categories = useSelector((state) => state.categories);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
 
   const getCurrentMonthYear = () => {
     const now = new Date();
@@ -138,6 +202,13 @@ const Home = () => {
   };
 
   useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
     updateCategories();
     updateTransactionTypes();
   }, []);
@@ -169,9 +240,28 @@ const Home = () => {
     navigate('/addEntry');
   };
 
+  const handleLogout = () => {
+    Utils.removeAllCookies()
+    dispatch(setAuthToken(initialStateAuthToken))
+  };
+
+  const handleClickOutside = (e) => {
+    if (menuRef.current && !menuRef.current.contains(e.target)) {
+      setMenuOpen(false); // Fecha o menu ao clicar fora dele
+    }
+  };
+
   return (
     <Container>
-      {/* <h1>Selecionar Mês e Ano:</h1> */}
+
+      <MenuContainer>
+        <MenuButton onClick={() => setMenuOpen(!menuOpen)}>Menu</MenuButton>
+        <DropdownMenu ref={menuRef} show={menuOpen}>
+          {/* <MenuItem onClick={() => navigate('/settings')}>Configurações</MenuItem> */}
+          <MenuItem onClick={handleLogout}>Sair</MenuItem>
+        </DropdownMenu>
+      </MenuContainer>
+
       <MonthYearDropdown onMonthYearChange={setSelectedMonthYear} />
 
       <TotalContainer>
