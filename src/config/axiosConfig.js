@@ -12,10 +12,6 @@ axiosInstance.interceptors.request.use((config) => {
   if(authToken && authToken.access){
     config.headers.Authorization = `Bearer ${authToken.access}`;
   }
-  // const token = store.getState().authToken.access; // Acesse o estado global
-  // if (token) {
-  //   config.headers.Authorization = `Bearer ${token}`;
-  // }
   return config;
 }, (error) => {
   return Promise.reject(error);
