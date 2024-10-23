@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import API from '../api/rr_cfi_api';
@@ -83,14 +83,21 @@ const Button = styled.button`
 const AddEntry = () => {
   const navigate = useNavigate()
 
+  const categories = useSelector((state) => state.categories);
+  const transactionTypes = useSelector((state) => state.transactionTypes)
+
   const [title, setTitle] = useState('');
   const [totalValue, setTotalValue] = useState('0,00');
   const [totalInstallments, setTotalInstallments] = useState(1);
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [category, setCategory] = useState('');
 
-  const categories = useSelector((state) => state.categories);
-  const transactionTypes = useSelector((state) => state.transactionTypes)
+  useEffect(() => {
+    if (categories && Object.keys(categories).length > 0) {
+      // Define a categoria padrão ao carregar as categorias
+      setCategory(Utils.getDefaultCategory(categories));
+    }
+  }, [categories]);
 
   const sendEntry = async (entry) => {
     try {

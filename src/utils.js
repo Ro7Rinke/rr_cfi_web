@@ -8,11 +8,22 @@ const Utils = {
         })
     },
     getDefaultTransactionTypes: (transactionTypes) => {
+        let lastId = null
         for (const key in transactionTypes) {
+            lastId = transactionTypes[key].id
             if(transactionTypes[key].default)
                 return transactionTypes[key].id
         }
-        return 1
+        return lastId ?? 1
+    },
+    getDefaultCategory: (categories) => {
+        let lastId = null
+        for (const key in categories){
+            lastId = categories[key].id
+            if(categories[key].default)
+                return categories[key].id
+        }
+        return lastId ?? 1
     }
 }
 
