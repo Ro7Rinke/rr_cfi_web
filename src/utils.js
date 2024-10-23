@@ -1,3 +1,5 @@
+import axios from "axios"
+
 const Utils = {
     formatToBRL: (value) => {
         return value.toLocaleString('pt-BR', {
@@ -24,6 +26,17 @@ const Utils = {
                 return categories[key].id
         }
         return lastId ?? 1
+    },
+    getNumberOfCommits: async () => {
+        try {
+            const response = await axios.get('https://api.github.com/repos/Ro7Rinke/rr_cfi_web/commits')
+            if(response && Array.isArray(response.data))
+                return response.data.length
+            return 0
+        } catch (error) {
+            console.error(error)
+            return 0
+        }
     }
 }
 
