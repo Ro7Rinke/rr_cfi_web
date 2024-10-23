@@ -14,7 +14,7 @@ const TotalContainer = styled.div`
   display: flex;
   justify-content: space-between; /* Alinha o texto à esquerda e o valor à direita */
   padding: 15px;
-  background-color: #222; /* Fundo do container */
+  background-color: #333333; /* Fundo do container */
   border-radius: 8px;
   margin: 10px 0; /* Espaçamento acima e abaixo */
   color: #fdd835; /* Cor do texto */
@@ -23,10 +23,10 @@ const TotalContainer = styled.div`
 // Estilizando o container principal
 const Container = styled.div`
   padding: 20px; /* Espaçamento interno */
-  background-color: #121212; /* Fundo da página */
+  background-color: #1c1c1c; /* Fundo da página */
   color: white; /* Cor do texto */
   min-height: 100vh; /* Para garantir que ocupe toda a altura da tela */
-  padding-bottom: 60px;
+  padding-bottom: 160px;
 `;
 
 const SpacingDiv = styled.div`
@@ -51,7 +51,7 @@ const FloatingButton = styled.button`
   cursor: pointer;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: background-color 0.3s;
-  opacity: 0.34;
+  opacity: 0.57;
 
   &:hover {
     background-color: #ffeb3b;
