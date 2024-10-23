@@ -72,6 +72,7 @@ const FloatingButton = styled.button`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: background-color 0.3s;
   opacity: 0.57;
+  aspect-ratio: 1 / 1; /* Mantém a proporção */
 
   &:hover {
     background-color: #ffeb3b;
