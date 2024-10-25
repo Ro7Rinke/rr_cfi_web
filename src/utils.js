@@ -1,4 +1,10 @@
+import axios from "axios"
+import Cookies from 'js-cookie';
+
 const Utils = {
+    formatDate: (date) => {
+        return new Date(date).toLocaleDateString('pt-BR');
+    },
     formatToBRL: (value) => {
         return value.toLocaleString('pt-BR', {
         style: 'currency',
@@ -24,6 +30,23 @@ const Utils = {
                 return categories[key].id
         }
         return lastId ?? 1
+    },
+    getNumberOfCommits: async () => {
+        try {
+            const response = await axios.get('https://api.github.com/repos/Ro7Rinke/rr_cfi_web/commits')
+            if(response && Array.isArray(response.data))
+                return response.data.length
+            return 0
+        } catch (error) {
+            console.error(error)
+            return 0
+        }
+    },
+    removeAllCookies: () => {
+        const cookies = Cookies.get()
+        for(const cookie in cookies){
+            Cookies.remove(cookie)
+        }
     }
 }
 

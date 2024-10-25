@@ -121,7 +121,7 @@ const Login = () => {
 
   useEffect(() => {
     checkLogged()
-  }, [])
+  }, [checkLogged])
 
   return (
     <Container>
