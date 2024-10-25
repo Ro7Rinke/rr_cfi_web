@@ -151,6 +151,16 @@ const EntryDetails = () => {
     fetchEntryInstallments();
   }, []);
 
+  const handleDelete = async () => {
+    try {
+      const result = await API.deleteEntry(entryId)
+      console.log(result)
+      navigate('/home')
+    } catch (error) {
+      alert("Falha ao excluir lançamento")
+    }
+  }
+
   return !entry ? null : (
     <Container>
       {/* Título e separador colorido */}
@@ -184,7 +194,7 @@ const EntryDetails = () => {
       {/* Botões de Editar e Excluir */}
       <ButtonContainer>
         <EditButton onClick={() => console.log('Editar')}>Editar</EditButton>
-        <DeleteButton onClick={() => console.log('Excluir')}>Excluir</DeleteButton>
+        <DeleteButton onClick={handleDelete}>Excluir</DeleteButton>
       </ButtonContainer>
 
       {/* Separador fino */}

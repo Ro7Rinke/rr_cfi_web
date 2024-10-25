@@ -99,6 +99,15 @@ const API = {
             console.log(error)
             throw error
         }
+    },
+    deleteEntry: async (entryId) => {
+        try {
+            const response = await axios.delete(`/cfi/entries/${entryId}/`)
+            return response.data
+        } catch (error) {
+            console.log(error)
+            throw error
+        }
     }
 }
 
