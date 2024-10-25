@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 import API from '../api/rr_cfi_api';
 import { FaCalendarAlt, FaCreditCard } from 'react-icons/fa';
+import Modal from 'react-modal';
 
 // Estilizando o container principal
 const Container = styled.div`
@@ -110,6 +111,68 @@ const DeleteButton = styled(Button)`
   }
 `;
 
+// Estilizando o modal de confirmação
+const ModalContent = styled.div`
+  background-color: #1c1c1c; /* Cor de fundo escura */
+  padding: 20px;
+  border-radius: 10px;
+  color: white;
+  max-width: 400px;
+  margin: 0 auto;
+  text-align: center;
+`;
+
+const ModalTitle = styled.h2`
+  color: #fdd835; /* Amarelo para o título */
+  margin-bottom: 20px;
+`;
+
+const ModalText = styled.p`
+  font-size: 18px;
+  color: #bdbdbd; /* Cinza para o texto */
+  margin-bottom: 30px;
+`;
+
+const ModalButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+`;
+
+const ConfirmButton = styled.button`
+  flex: 1;
+  background-color: #d32f2f;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #b71c1c;
+  }
+`;
+
+const CancelButton = styled.button`
+  flex: 1;
+  background-color: #555;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #777;
+  }
+`;
+
 const EntryDetails = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -118,6 +181,7 @@ const EntryDetails = () => {
   const categories = useSelector((state) => state.categories);
   const [installments, setInstallments] = useState([]);
   const [entry, setEntry] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const categoryColor = categories[`${entry?.id_category}`]?.color || '#555';
 
   const fetchEntry = async () => {
@@ -161,6 +225,9 @@ const EntryDetails = () => {
     }
   }
 
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
   return !entry ? null : (
     <Container>
       {/* Título e separador colorido */}
@@ -194,8 +261,42 @@ const EntryDetails = () => {
       {/* Botões de Editar e Excluir */}
       <ButtonContainer>
         <EditButton onClick={() => console.log('Editar')}>Editar</EditButton>
-        <DeleteButton onClick={handleDelete}>Excluir</DeleteButton>
+        <DeleteButton onClick={openModal}>Excluir</DeleteButton>
       </ButtonContainer>
+
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        contentLabel="Confirmar Exclusão"
+        ariaHideApp={false}
+        style={{
+          overlay: {
+            backgroundColor: 'rgba(0, 0, 0, 0.75)', // Fundo escurecido
+          },
+          content: {
+            top: '50%',
+            left: '50%',
+            right: 'auto',
+            bottom: 'auto',
+            marginRight: '-50%',
+            transform: 'translate(-50%, -50%)',
+            border: 'none',
+            padding: '0',
+            background: 'transparent',
+            maxWidth: '90%', // Para garantir que não exceda 90% da largura da tela
+            maxHeight: '90%', // Para garantir que não exceda 90% da altura da tela
+          },
+        }}
+      >
+        <ModalContent>
+          <ModalTitle>Deseja excluir este lançamento?</ModalTitle>
+          <ModalText>Todas as parcelas vinculadas também serão deletadas.</ModalText>
+          <ModalButtonContainer>
+            <ConfirmButton onClick={handleDelete}>Confirmar</ConfirmButton>
+            <CancelButton onClick={closeModal}>Cancelar</CancelButton>
+          </ModalButtonContainer>
+        </ModalContent>
+      </Modal>
 
       {/* Separador fino */}
       <ThinSeparator />
