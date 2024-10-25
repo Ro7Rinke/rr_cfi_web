@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { FaCalendarAlt, FaCreditCard } from 'react-icons/fa';
 import Utils from '../utils';
+import { useNavigate } from 'react-router-dom';
 
 const InstallmentContainer = styled.div`
   border: 4px solid #fdd835;
@@ -68,26 +69,33 @@ const Separator = styled.hr`
   margin: 15px 0;
 `;
 
-const InstallmentItem = ({ installment }) => {
+const InstallmentItem = ({ installment, isFromEntry }) => {
+  const navigate = useNavigate()
+
     const categories = useSelector((state) => state.categories);
     const category = categories[`${installment.entry.id_category}`];
     const color = category ? category.color : 'transparent';
 
-    const dateText = new Date(installment.entry.date).toLocaleDateString('pt-BR');
+    // const dateText = new Date(installment.entry.date).toLocaleDateString('pt-BR');
     let installmentNumberText = `${installment.installment_number}`;
     if (installment.entry.total_installments > 1) {
         installmentNumberText += ` / ${installment.entry.total_installments}`;
     }
 
+    const handleClick = () => {
+      if(!isFromEntry)
+        navigate('/entry-details', {state: {entryId: installment.entry.id}})
+    }
+
     return (
-        <InstallmentContainer>
+        <InstallmentContainer onClick={handleClick}>
             <ColorBar color={color} />
             <InstallmentTitle>{installment.entry.title}</InstallmentTitle>
             <InstallmentValue>{Utils.formatToBRL(installment.value)}</InstallmentValue>
             <Separator />
             <InstallmentDetails>
                 <InstallmentIconText>
-                    <FaCalendarAlt /> {dateText}
+                    <FaCalendarAlt /> {Utils.formatDate(isFromEntry ? installment.reference_date : installment.entry.date)}
                 </InstallmentIconText>
                 <InstallmentIconText>
                     <FaCreditCard /> {installmentNumberText}

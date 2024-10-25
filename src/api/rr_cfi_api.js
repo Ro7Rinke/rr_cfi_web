@@ -41,6 +41,15 @@ const API = {
             return []
         }
     },
+    getInstallmentsByEntry: async (entryId) => {
+        try {
+            const response = await axios.get(`/cfi/installments/entry/${entryId}/`)
+            return response.data           
+        } catch (error) {
+            console.log(error)
+            return []
+        }
+    },
     getCategories: async () => {
         try {
             const response = await axios.get(`/cfi/categories`);
@@ -82,6 +91,15 @@ const API = {
             return false
         }
     },
+    getEntry: async (entryId) => {
+        try {
+            const response = await axios.get(`/cfi/entries/${entryId}/`)
+            return response.data
+        } catch (error) {
+            console.log(error)
+            throw error
+        }
+    }
 }
 
 export default API

@@ -237,7 +237,7 @@ const Home = () => {
   const totals = calculateTotals();
 
   const handleAddEntry = () => {
-    navigate('/addEntry');
+    navigate('/add-entry');
   };
 
   const handleLogout = () => {
@@ -285,7 +285,7 @@ const Home = () => {
       <SpacingDiv />
 
       {installments.length > 0 ? (
-        installments.map((installment, index) => <InstallmentItem key={index} installment={installment} />)
+        installments.map((installment, index) => <InstallmentItem key={index} installment={installment} isFromEntry={false} />)
       ) : (
         <p>Nenhuma parcela disponível para {selectedMonthYear}.</p>
       )}

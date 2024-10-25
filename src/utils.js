@@ -2,6 +2,9 @@ import axios from "axios"
 import Cookies from 'js-cookie';
 
 const Utils = {
+    formatDate: (date) => {
+        return new Date(date).toLocaleDateString('pt-BR');
+    },
     formatToBRL: (value) => {
         return value.toLocaleString('pt-BR', {
         style: 'currency',
