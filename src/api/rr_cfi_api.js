@@ -81,7 +81,7 @@ const API = {
         try {
             const config = {
                 method: entry.id ? HTTP_METHOD.PATCH : HTTP_METHOD.POST,
-                url: '/cfi/entries/',
+                url: entry.id ? `/cfi/entries/${entry.id}/` : `/cfi/entries/`,
                 data: entry
             }
             const response = await axios(config);

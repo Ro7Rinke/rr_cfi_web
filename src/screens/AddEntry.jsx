@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import API from '../api/rr_cfi_api';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Utils from '../utils';
 
 const Container = styled.div`
@@ -64,24 +64,32 @@ const Select = styled.select`
   }
 `;
 
-const Button = styled.button`
-  padding: 10px;
-  font-size: 18px;
-  font-weight: bold;
-  background-color: #fdd835;
-  border: none;
-  border-radius: 5px;
-  color: black;
-  cursor: pointer;
-  transition: background-color 0.3s;
+const ButtonContainer = styled.div`
+display: flex;
+width: 100%;
+gap: 10px;
+`;
 
-  &:hover {
-    background-color: #e1c006;
-  }
+const Button = styled.button`
+flex: 1;
+padding: 10px;
+font-size: 18px;
+font-weight: bold;
+border-radius: 5px;
+cursor: pointer;
+transition: background-color 0.3s;
+color: ${({ color }) => (color === 'gray' ? '#ddd' : 'black')};
+background-color: ${({ color }) => (color === 'gray' ? '#666' : '#fdd835')};
+
+&:hover {
+  background-color: ${({ color }) => (color === 'gray' ? '#555' : '#e1c006')};
+}
 `;
 
 const AddEntry = () => {
   const navigate = useNavigate()
+  const location = useLocation();
+  const entryId = location.state?.entryId;
 
   const categories = useSelector((state) => state.categories);
   const transactionTypes = useSelector((state) => state.transactionTypes)
@@ -90,7 +98,33 @@ const AddEntry = () => {
   const [totalValue, setTotalValue] = useState('0,00');
   const [totalInstallments, setTotalInstallments] = useState(1);
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState(null);
+  const [entry, setEntry] = useState(null);
+
+  const fetchEntry = async () => {
+    try {
+      const result = await API.getEntry(entryId)
+      setEntry(result)
+    } catch (error) {
+      alert('Falha ao carregar o lançamento')
+      navigate('/home')
+    }
+  }
+
+  useEffect(() => {
+    if(entry){
+      setTitle(entry.title);
+      setTotalValue(Utils.formatValue(entry.total_value * 100));
+      setTotalInstallments(entry.total_installments);
+      setDate(new Date(entry.date).toISOString().split('T')[0]);
+      setCategory(entry.id_category);
+    }
+  }, [entry])
+
+  useEffect(() => {
+    if(entryId)
+      fetchEntry()
+  }, [])
 
   useEffect(() => {
     if (categories && Object.keys(categories).length > 0) {
@@ -103,7 +137,7 @@ const AddEntry = () => {
     try {
       const result = await API.sendEntry(entry)
       if(result){
-        navigate('/home')
+        navigate(-1)
       }else{
         alert('Não foi possível criar o lançamento')
       }
@@ -119,13 +153,7 @@ const AddEntry = () => {
       setTotalValue('0,00');
       return;
     }
-    value = parseInt(value, 10).toString();
-    const formattedValue = (value.length === 1 
-      ? '0,0' + value 
-      : value.length === 2 
-      ? '0,' + value 
-      : value.slice(0, -2) + ',' + value.slice(-2)
-    );
+    const formattedValue = Utils.formatValue(value)
     setTotalValue(formattedValue);
   };
 
@@ -134,10 +162,14 @@ const AddEntry = () => {
     e.target.setSelectionRange(length, length);
   };
 
+  const handleCancel = () => {
+    navigate(-1);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const formattedTotalValue = parseFloat(totalValue.replace(',', '.'));
-    const newEntry = {
+    let newEntry = {
       title,
       total_value: formattedTotalValue,
       total_installments: totalInstallments,
@@ -145,13 +177,16 @@ const AddEntry = () => {
       id_category: category,
       is_periodic: false,
       id_transaction_type: Utils.getDefaultTransactionTypes(transactionTypes)
-    };
+    }
+    if(entryId)
+      newEntry.id = entryId
+
     sendEntry(newEntry)
   };
 
   return (
     <Container>
-      <h1>Novo Lançamento</h1>
+      <h1>{entryId ? 'Editar Lançamento' : 'Novo Lançamento'}</h1>
       <Form onSubmit={handleSubmit}>
         <FormGroup>
           <Label>Título:</Label>
@@ -207,7 +242,18 @@ const AddEntry = () => {
           </Select>
         </FormGroup>
 
-        <Button type="submit">Adicionar Lançamento</Button>
+        <ButtonContainer>
+          {entryId ? (
+            <>
+              <Button type="button" color="gray" onClick={handleCancel}>
+                Cancelar
+              </Button>
+              <Button type="submit">Salvar</Button>
+            </>
+          ) : (
+            <Button type="submit">Adicionar Lançamento</Button>
+          )}
+        </ButtonContainer>
       </Form>
     </Container>
   );

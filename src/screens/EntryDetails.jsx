@@ -105,6 +105,7 @@ const EditButton = styled(Button)`
 
 const DeleteButton = styled(Button)`
   background-color: #d32f2f;
+  color: #ddd;
 
   &:hover {
     background-color: #b71c1c;
@@ -142,7 +143,7 @@ const ModalButtonContainer = styled.div`
 const ConfirmButton = styled.button`
   flex: 1;
   background-color: #d32f2f;
-  color: white;
+  color: #ddd;
   font-size: 16px;
   font-weight: bold;
   border: none;
@@ -159,7 +160,7 @@ const ConfirmButton = styled.button`
 const CancelButton = styled.button`
   flex: 1;
   background-color: #555;
-  color: white;
+  color: #ddd;
   font-size: 16px;
   font-weight: bold;
   border: none;
@@ -225,6 +226,10 @@ const EntryDetails = () => {
     }
   }
 
+  const handleEdit = () => {
+    navigate('/add-entry', {state: {entryId}})
+  }
+
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
@@ -260,7 +265,7 @@ const EntryDetails = () => {
 
       {/* Botões de Editar e Excluir */}
       <ButtonContainer>
-        <EditButton onClick={() => console.log('Editar')}>Editar</EditButton>
+        <EditButton onClick={handleEdit}>Editar</EditButton>
         <DeleteButton onClick={openModal}>Excluir</DeleteButton>
       </ButtonContainer>
 
